@@ -80,6 +80,7 @@ public class CompanyController {
             Company company = new Company();
             company.setTitle(dto.getTitle());
             company.setFoundationDate(dto.getFoundationDate());
+            company.setContactId(dto.getContactId());
             company.setCreatedUserId(authenticatedCompanyId);
             company.setCreatedTime(new Date());
             company = companyService.save(company);
@@ -100,6 +101,7 @@ public class CompanyController {
             Company company = new Company();
             company.setTitle(dto.getTitle());
             company.setFoundationDate(dto.getFoundationDate());
+            company.setContactId(dto.getContactId());
             company = companyService.save(company);
             return ResponseEntity.ok().build();
         } catch (Exception exception) {

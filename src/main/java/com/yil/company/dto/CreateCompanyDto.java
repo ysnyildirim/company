@@ -21,4 +21,5 @@ public class CreateCompanyDto {
     private String title;
     @NotNull
     private Date foundationDate;
+    private Long contactId;
 }

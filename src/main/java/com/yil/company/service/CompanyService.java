@@ -24,6 +24,7 @@ public class CompanyService {
             throw new NullPointerException("Company is null");
         CompanyDto dto = new CompanyDto();
         dto.setId(company.getId());
+        dto.setContactId(company.getContactId());
         dto.setTitle(company.getTitle());
         dto.setFoundationDate(company.getFoundationDate());
         return dto;

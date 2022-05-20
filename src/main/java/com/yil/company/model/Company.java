@@ -28,4 +28,6 @@ public class Company extends AbstractEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "FoundationDate")
     private Date foundationDate;
+    @Column(name = "ContactId")
+    private Long contactId;
 }

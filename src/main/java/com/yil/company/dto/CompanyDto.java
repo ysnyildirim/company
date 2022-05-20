@@ -15,4 +15,5 @@ public class CompanyDto {
     private Long id;
     private String title;
     private Date foundationDate;
+    private Long contactId;
 }
