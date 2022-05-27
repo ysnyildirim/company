@@ -1,6 +1,6 @@
 package com.yil.company.controller;
 
-import com.yil.company.base.ApiHeaders;
+import com.yil.company.base.ApiConstant;
 import com.yil.company.base.PageDto;
 import com.yil.company.dto.CompanyDto;
 import com.yil.company.dto.CreateCompanyDto;
@@ -34,8 +34,8 @@ public class CompanyController {
 
     @GetMapping
     public ResponseEntity<PageDto<CompanyDto>> findAll(
-            @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "1000") int size) {
+            @RequestParam(required = false, defaultValue = ApiConstant.PAGE) int page,
+            @RequestParam(required = false, defaultValue = ApiConstant.PAGE_SIZE) int size) {
         try {
             if (page < 0)
                 page = 0;
@@ -74,7 +74,7 @@ public class CompanyController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity create(@RequestHeader(value = ApiHeaders.AUTHENTICATED_USER_ID) Long authenticatedCompanyId,
+    public ResponseEntity create(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedCompanyId,
                                  @Valid @RequestBody CreateCompanyDto dto) {
         try {
             Company company = new Company();
@@ -94,7 +94,7 @@ public class CompanyController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity replace(@RequestHeader(value = ApiHeaders.AUTHENTICATED_USER_ID) Long authenticatedCompanyId,
+    public ResponseEntity replace(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedCompanyId,
                                   @PathVariable Long id,
                                   @Valid @RequestBody CreateCompanyDto dto) {
         try {
@@ -112,7 +112,7 @@ public class CompanyController {
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> delete(@RequestHeader(value = ApiHeaders.AUTHENTICATED_USER_ID) Long authenticatedCompanyId,
+    public ResponseEntity<String> delete(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedCompanyId,
                                          @PathVariable Long id) {
         try {
             Company company;
