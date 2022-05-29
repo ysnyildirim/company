@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
-    ;
+    CompanyNotFound(3000000, "Company not found");
 
     private final int code;
 

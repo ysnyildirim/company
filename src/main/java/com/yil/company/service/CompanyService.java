@@ -1,14 +1,13 @@
 package com.yil.company.service;
 
 import com.yil.company.dto.CompanyDto;
+import com.yil.company.exception.CompanyNotFound;
 import com.yil.company.model.Company;
 import com.yil.company.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityNotFoundException;
 
 @Service
 public class CompanyService {
@@ -30,10 +29,17 @@ public class CompanyService {
         return dto;
     }
 
-    public Company findById(Long id) throws EntityNotFoundException {
+    public Company findById(Long id) throws CompanyNotFound {
         return companyRepository.findById(id).orElseThrow(() -> {
-            return new EntityNotFoundException();
+            throw new CompanyNotFound();
         });
+    }
+
+    public Company findByIdAndDeletedTimeIsNull(Long id) throws CompanyNotFound {
+        Company company = companyRepository.findByIdAndDeletedTimeIsNull(id);
+        if (company == null)
+            throw new CompanyNotFound();
+        return company;
     }
 
     public Company save(Company company) {

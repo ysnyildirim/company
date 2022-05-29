@@ -36,83 +36,58 @@ public class CompanyController {
     public ResponseEntity<PageDto<CompanyDto>> findAll(
             @RequestParam(required = false, defaultValue = ApiConstant.PAGE) int page,
             @RequestParam(required = false, defaultValue = ApiConstant.PAGE_SIZE) int size) {
-        try {
-            if (page < 0)
-                page = 0;
-            if (size <= 0 || size > 1000)
-                size = 1000;
-            Pageable pageable = PageRequest.of(page, size);
-            Page<Company> companyPage = companyService.findAllByDeletedTimeIsNull(pageable);
-            PageDto<CompanyDto> pageDto = PageDto.toDto(companyPage, CompanyService::toDto);
-            return ResponseEntity.ok(pageDto);
-        } catch (Exception exception) {
-            logger.error(null, exception);
-            return ResponseEntity.internalServerError().build();
-        }
+        if (page < 0)
+            page = 0;
+        if (size <= 0 || size > 1000)
+            size = 1000;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Company> companyPage = companyService.findAllByDeletedTimeIsNull(pageable);
+        PageDto<CompanyDto> pageDto = PageDto.toDto(companyPage, CompanyService::toDto);
+        return ResponseEntity.ok(pageDto);
     }
 
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<CompanyDto> findById(@PathVariable Long id) {
-        try {
-            Company company;
-            try {
-                company = companyService.findById(id);
-            } catch (EntityNotFoundException entityNotFoundException) {
-                return ResponseEntity.notFound().build();
-            } catch (Exception e) {
-                throw e;
-            }
-            CompanyDto dto = CompanyService.toDto(company);
-            return ResponseEntity.ok(dto);
-        } catch (Exception exception) {
-            logger.error(null, exception);
-            return ResponseEntity.internalServerError().build();
-        }
+        Company company = companyService.findById(id);
+        CompanyDto dto = CompanyService.toDto(company);
+        return ResponseEntity.ok(dto);
     }
 
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity create(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedCompanyId,
-                                 @Valid @RequestBody CreateCompanyDto dto) {
-        try {
-            Company company = new Company();
-            company.setTitle(dto.getTitle());
-            company.setFoundationDate(dto.getFoundationDate());
-            company.setContactId(dto.getContactId());
-            company.setCreatedUserId(authenticatedCompanyId);
-            company.setCreatedTime(new Date());
-            company = companyService.save(company);
-            return ResponseEntity.created(null).build();
-        } catch (Exception exception) {
-            logger.error(null, exception);
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<CompanyDto> create(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedUserId,
+                                             @Valid @RequestBody CreateCompanyDto request) {
+        Company company = new Company();
+        company.setTitle(request.getTitle());
+        company.setFoundationDate(request.getFoundationDate());
+        company.setContactId(request.getContactId());
+        company.setCreatedUserId(authenticatedUserId);
+        company.setCreatedTime(new Date());
+        company = companyService.save(company);
+        CompanyDto responce = CompanyService.toDto(company);
+        return ResponseEntity.created(null).body(responce);
     }
 
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity replace(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedCompanyId,
-                                  @PathVariable Long id,
-                                  @Valid @RequestBody CreateCompanyDto dto) {
-        try {
-            Company company = new Company();
-            company.setTitle(dto.getTitle());
-            company.setFoundationDate(dto.getFoundationDate());
-            company.setContactId(dto.getContactId());
-            company = companyService.save(company);
-            return ResponseEntity.ok().build();
-        } catch (Exception exception) {
-            logger.error(null, exception);
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<CompanyDto> replace(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedUserId,
+                                              @PathVariable Long id,
+                                              @Valid @RequestBody CreateCompanyDto request) {
+        Company company = companyService.findByIdAndDeletedTimeIsNull(id);
+        company.setTitle(request.getTitle());
+        company.setFoundationDate(request.getFoundationDate());
+        company.setContactId(request.getContactId());
+        company = companyService.save(company);
+        CompanyDto responce = CompanyService.toDto(company);
+        return ResponseEntity.ok(responce);
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> delete(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedCompanyId,
+    public ResponseEntity<String> delete(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedUserId,
                                          @PathVariable Long id) {
         try {
             Company company;
@@ -123,7 +98,7 @@ public class CompanyController {
             } catch (Exception e) {
                 throw e;
             }
-            company.setDeletedUserId(authenticatedCompanyId);
+            company.setDeletedUserId(authenticatedUserId);
             company.setDeletedTime(new Date());
             companyService.save(company);
             return ResponseEntity.ok("Company deleted.");
