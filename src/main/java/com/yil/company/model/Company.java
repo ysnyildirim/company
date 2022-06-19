@@ -14,20 +14,20 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Company")
+@Table(name = "COMPANY")
 public class Company extends AbstractEntity {
     @Id
-    @SequenceGenerator(name = "User_Sequence_Generator",
-            sequenceName = "Seq_User",
+    @SequenceGenerator(name = "USER_SEQUENCE_GENERATOR",
+            sequenceName = "SEQ_USER_ID",
             allocationSize = 1)
-    @GeneratedValue(generator = "User_Sequence_Generator")
-    @Column(name = "Id")
+    @GeneratedValue(generator = "USER_SEQUENCE_GENERATOR")
+    @Column(name = "ID")
     private Long id;
-    @Column(name = "Title", nullable = false, length = 1000)
+    @Column(name = "TITLE", nullable = false, length = 1000)
     private String title;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "FoundationDate")
+    @Column(name = "FOUNDATION_DATE")
     private Date foundationDate;
-    @Column(name = "ContactId")
+    @Column(name = "CONTACT_ID")
     private Long contactId;
 }
