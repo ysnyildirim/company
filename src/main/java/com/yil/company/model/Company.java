@@ -14,7 +14,8 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "COMPANY")
+@Table(schema = "CMP",
+        name = "COMPANY")
 public class Company extends AbstractEntity {
     @Id
     @SequenceGenerator(name = "USER_SEQUENCE_GENERATOR",
