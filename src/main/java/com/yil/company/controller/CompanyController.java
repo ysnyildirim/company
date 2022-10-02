@@ -1,5 +1,4 @@
 package com.yil.company.controller;
-
 import com.yil.company.base.ApiConstant;
 import com.yil.company.base.PageDto;
 import com.yil.company.dto.CompanyDto;
@@ -15,11 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.Date;
-
 @RestController
 @RequestMapping(value = "/api/cmp/v1/companies")
 public class CompanyController {
@@ -67,7 +64,7 @@ public class CompanyController {
         company.setCreatedTime(new Date());
         company = companyService.save(company);
         CompanyDto responce = CompanyService.toDto(company);
-        return ResponseEntity.created(null).body(responce);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responce);
     }
 
 
