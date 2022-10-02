@@ -1,4 +1,5 @@
 package com.yil.company.controller;
+
 import com.yil.company.base.ApiConstant;
 import com.yil.company.base.PageDto;
 import com.yil.company.dto.CompanyDto;
@@ -14,13 +15,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.Date;
+
 @RestController
 @RequestMapping(value = "/api/cmp/v1/companies")
 public class CompanyController {
-
     private final Log logger = LogFactory.getLog(this.getClass());
     private final CompanyService companyService;
 
@@ -43,14 +45,12 @@ public class CompanyController {
         return ResponseEntity.ok(pageDto);
     }
 
-
     @GetMapping(value = "/{id}")
     public ResponseEntity<CompanyDto> findById(@PathVariable Long id) {
         Company company = companyService.findById(id);
         CompanyDto dto = CompanyService.toDto(company);
         return ResponseEntity.ok(dto);
     }
-
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -66,7 +66,6 @@ public class CompanyController {
         CompanyDto responce = CompanyService.toDto(company);
         return ResponseEntity.status(HttpStatus.CREATED).body(responce);
     }
-
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -104,6 +103,4 @@ public class CompanyController {
             return ResponseEntity.internalServerError().build();
         }
     }
-
-
 }

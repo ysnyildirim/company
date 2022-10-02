@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
-
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
@@ -55,6 +55,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleApiError(ex, responce, headers, status, request);
     }
 
+    protected final ResponseEntity<Object> handleApiError(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return new ResponseEntity(body, headers, status);
+    }
+
     @ExceptionHandler({Exception.class})
     @Nullable
     public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
@@ -70,9 +74,5 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 .code(apiException.code().getCode())
                 .build();
         return handleApiError(ex, responce, new HttpHeaders(), status, request);
-    }
-
-    protected final ResponseEntity<Object> handleApiError(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity(body, headers, status);
     }
 }
