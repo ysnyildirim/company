@@ -6,6 +6,7 @@ import com.yil.company.dto.CompanyDto;
 import com.yil.company.dto.CreateCompanyDto;
 import com.yil.company.model.Company;
 import com.yil.company.service.CompanyService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import javax.validation.Valid;
 import java.util.Date;
 
 @RestController
-@RequestMapping(value = "/api/company/v1/companies")
+@RequestMapping(value = "/api/cpy/v1/companies")
 public class CompanyController {
 
     private final Log logger = LogFactory.getLog(this.getClass());
@@ -32,6 +33,7 @@ public class CompanyController {
         this.companyService = companyService;
     }
 
+    @Operation(summary = "Tüm şirket bilgilerini getirir.")
     @GetMapping
     public ResponseEntity<PageDto<CompanyDto>> findAll(
             @RequestParam(required = false, defaultValue = ApiConstant.PAGE) int page,
@@ -46,7 +48,7 @@ public class CompanyController {
         return ResponseEntity.ok(pageDto);
     }
 
-
+    @Operation(summary = "Id bazlı şirket bilgilerini getirir.")
     @GetMapping(value = "/{id}")
     public ResponseEntity<CompanyDto> findById(@PathVariable Long id) {
         Company company = companyService.findById(id);
@@ -54,7 +56,7 @@ public class CompanyController {
         return ResponseEntity.ok(dto);
     }
 
-
+    @Operation(summary = "Yeni bir şirket bilgisi eklemek için kullanılır.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CompanyDto> create(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedUserId,
@@ -71,6 +73,7 @@ public class CompanyController {
     }
 
 
+    @Operation(summary = "Id bazlı şirket bilgisi güncellemek için kullanılır.")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<CompanyDto> replace(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedUserId,
@@ -85,6 +88,7 @@ public class CompanyController {
         return ResponseEntity.ok(responce);
     }
 
+    @Operation(summary = "Id bazlı şirket bilgisi silmek için kullanılır.")
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> delete(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedUserId,
