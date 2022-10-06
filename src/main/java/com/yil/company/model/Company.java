@@ -19,8 +19,7 @@ import java.util.Date;
 public class Company extends AbstractEntity {
     @Id
     @SequenceGenerator(name = "USER_SEQUENCE_GENERATOR",
-            sequenceName = "SEQ_USER_ID",
-            allocationSize = 1)
+            sequenceName = "SEQ_USER_ID")
     @GeneratedValue(generator = "USER_SEQUENCE_GENERATOR")
     @Column(name = "ID")
     private Long id;

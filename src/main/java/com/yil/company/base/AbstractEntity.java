@@ -9,12 +9,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
 
-
 @Getter
 @Setter
 @MappedSuperclass
 public abstract class AbstractEntity implements IEntity {
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED_TIME")
     private Date createdTime;
