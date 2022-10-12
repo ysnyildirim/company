@@ -30,4 +30,14 @@ public class Company extends AbstractEntity {
     private Date foundationDate;
     @Column(name = "CONTACT_ID")
     private Long contactId;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATED_DATE")
+    private Date createdDate;
+    @Column(name = "CREATED_USER_ID")
+    private Long createdUserId;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LAST_MODIFY_DATE")
+    private Date lastModifyDate;
+    @Column(name = "LAST_MODIFY_USER_ID")
+    private Long lastModifyUserId;
 }

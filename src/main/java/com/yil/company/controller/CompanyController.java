@@ -59,33 +59,21 @@ public class CompanyController {
     @Operation(summary = "Yeni bir şirket bilgisi eklemek için kullanılır.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CompanyDto> create(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedUserId,
-                                             @Valid @RequestBody CreateCompanyDto request) {
-        Company company = new Company();
-        company.setTitle(request.getTitle());
-        company.setFoundationDate(request.getFoundationDate());
-        company.setContactId(request.getContactId());
-        company.setCreatedUserId(authenticatedUserId);
-        company.setCreatedTime(new Date());
-        company = companyService.save(company);
-        CompanyDto responce = CompanyService.toDto(company);
-        return ResponseEntity.created(null).body(responce);
+    public ResponseEntity<String> create(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedUserId,
+                                         @Valid @RequestBody CreateCompanyDto request) {
+        companyService.save(request, authenticatedUserId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Şirket bilgisi eklendi");
     }
 
 
     @Operation(summary = "Id bazlı şirket bilgisi güncellemek için kullanılır.")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<CompanyDto> replace(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedUserId,
-                                              @PathVariable Long id,
-                                              @Valid @RequestBody CreateCompanyDto request) {
-        Company company = companyService.findByIdAndDeletedTimeIsNull(id);
-        company.setTitle(request.getTitle());
-        company.setFoundationDate(request.getFoundationDate());
-        company.setContactId(request.getContactId());
-        company = companyService.save(company);
-        CompanyDto responce = CompanyService.toDto(company);
-        return ResponseEntity.ok(responce);
+    public ResponseEntity<String> replace(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedUserId,
+                                          @PathVariable Long id,
+                                          @Valid @RequestBody CreateCompanyDto request) {
+        companyService.replace(id, request, authenticatedUserId);
+        return ResponseEntity.ok().body("Şirket bilgisi güncellendi.");
     }
 
     @Operation(summary = "Id bazlı şirket bilgisi silmek için kullanılır.")
@@ -93,23 +81,9 @@ public class CompanyController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> delete(@RequestHeader(value = ApiConstant.AUTHENTICATED_USER_ID) Long authenticatedUserId,
                                          @PathVariable Long id) {
-        try {
-            Company company;
-            try {
-                company = companyService.findById(id);
-            } catch (EntityNotFoundException entityNotFoundException) {
-                return ResponseEntity.notFound().build();
-            } catch (Exception e) {
-                throw e;
-            }
-            company.setDeletedUserId(authenticatedUserId);
-            company.setDeletedTime(new Date());
-            companyService.save(company);
-            return ResponseEntity.ok("Company deleted.");
-        } catch (Exception exception) {
-            logger.error(null, exception);
-            return ResponseEntity.internalServerError().build();
-        }
+        Company company = companyService.findById(id);
+        companyService.delete(company);
+        return ResponseEntity.ok("Şirket datası silindi.");
     }
 
 

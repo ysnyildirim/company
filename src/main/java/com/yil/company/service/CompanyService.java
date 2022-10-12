@@ -1,6 +1,7 @@
 package com.yil.company.service;
 
 import com.yil.company.dto.CompanyDto;
+import com.yil.company.dto.CreateCompanyDto;
 import com.yil.company.exception.CompanyNotFound;
 import com.yil.company.model.Company;
 import com.yil.company.repository.CompanyRepository;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class CompanyService {
@@ -42,8 +45,33 @@ public class CompanyService {
         return company;
     }
 
-    public Company save(Company company) {
+
+    public Company save(CreateCompanyDto dto, long userId) throws CompanyNotFound {
+        Company company = new Company();
+        return getCompanyInform(dto, userId, company);
+    }
+
+    private Company getCompanyInform(CreateCompanyDto dto, long userId, Company company) {
+        company.setTitle(dto.getTitle());
+        company.setFoundationDate(new Date());
+        company.setContactId(dto.getContactId());
+        if (company.getId() == null) {
+            company.setCreatedUserId(userId);
+            company.setCreatedDate(new Date());
+        } else {
+            company.setLastModifyUserId(userId);
+            company.setLastModifyDate(new Date());
+        }
         return companyRepository.save(company);
+    }
+
+    public Company replace(long id, CreateCompanyDto dto, long userId) throws CompanyNotFound {
+        Company company = findById(id);
+        return getCompanyInform(dto, userId, company);
+    }
+
+    public void delete(Company company) {
+        companyRepository.delete(company);
     }
 
     public Page<Company> findAllByDeletedTimeIsNull(Pageable pageable) {
